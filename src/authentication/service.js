@@ -3,6 +3,7 @@
  */
 import {getLogger} from '../core/utils';
 import {apiUrl, headers} from '../core/api';
+import {User} from './User';
 
 const log = getLogger('authentication/service');
 const AUTH_STARTED = 'authentication/started';

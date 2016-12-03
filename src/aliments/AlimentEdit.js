@@ -43,8 +43,14 @@ export class AlimentEdit extends Component {
                 { state.isSaving &&
                 <ActivityIndicator animating={true} style={styles.activityIndicator} size="large"/>
                 }
-                <Text>Text</Text>
-                <TextInput value={state.aliment.text} onChangeText={(text) => this.updateAlimentText(text)}></TextInput>
+                <Text>Calories</Text>
+                <TextInput keyboardType = 'numeric' value={state.aliment.calories.toString()} onChangeText={(calories) => this.updateAliment(calories, state.aliment.fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
+                <Text>Proteins</Text>
+                <TextInput keyboardType = 'numeric' value={state.aliment.proteins.toString()} onChangeText={(proteins) => this.updateAliment(state.aliment.calories, state.aliment.fats, proteins, state.aliment.carbs)}></TextInput>
+                <Text>Carbs</Text>
+                <TextInput keyboardType = 'numeric' value={state.aliment.carbs.toString()} onChangeText={(carbs) => this.updateAliment(state.aliment.calories, state.aliment.fats, state.aliment.proteins, carbs)}></TextInput>
+                <Text>Fats</Text>
+                <TextInput keyboardType = 'numeric' value={state.aliment.fats.toString()} onChangeText={(fats) => this.updateAliment(state.aliment.calories, fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
                 {message && <Text>{message}</Text>}
             </View>
         );
@@ -69,9 +75,12 @@ export class AlimentEdit extends Component {
         this.props.store.dispatch(cancelSaveAliment());
     }
 
-    updateAlimentText(text) {
+    updateAliment(calories, fats, proteins, carbs) {
         let newState = {...this.state};
-        newState.aliment.text = text;
+        newState.aliment.calories = Number(calories);
+        newState.aliment.proteins = Number(proteins);
+        newState.aliment.carbs = Number(carbs);
+        newState.aliment.fats = Number(fats);
         this.setState(newState);
     }
 

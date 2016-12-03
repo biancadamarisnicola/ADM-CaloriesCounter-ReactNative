@@ -27,6 +27,7 @@ export class AlimentList extends Component {
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.id !== r2.id});
         const alimentState = this.props.store.getState().aliment;
         this.state = {isLoading: alimentState.isLoading, dataSource: this.ds.cloneWithRows(alimentState.items)};
+        log(this.state.size);
         registerRightAction(this.props.navigator, this.onNewAliment.bind(this));
     }
 

@@ -98,25 +98,28 @@ const NavigationBarRouteMapper = {
 
 const styles = StyleSheet.create({
     navigationBar: {
-        backgroundColor: 'blue',
+        backgroundColor: '#8000ff',
     },
     leftButton: {
-        color: '#ffffff',
+        color: '#1a0033',
         margin: 10,
         fontSize: 17,
     },
     title: {
         paddingVertical: 10,
-        color: '#ffffff',
+        fontWeight:'bold',
+        textAlign:'center',
+        color: '#1a0033',
         justifyContent: 'center',
         fontSize: 18
     },
     rightButton: {
-        color: 'white',
+        color: '#dab3ff',
         margin: 10,
         fontSize: 16
     },
     content: {
+        color: '#1a0033',
         marginTop: 90,
         marginLeft: 20,
         marginRight: 20,

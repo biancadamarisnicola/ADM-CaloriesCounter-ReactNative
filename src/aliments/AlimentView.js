@@ -13,7 +13,7 @@ export class AlimentView extends Component {
         return (
             <TouchableHighlight onPress={() => this.props.onPress(this.props.aliment)}>
                 <View>
-                    <Text style={styles.listItem}>{this.props.aliment.text}</Text>
+                    <Text style={styles.listItem}>{this.props.aliment.name}</Text>
                 </View>
             </TouchableHighlight>
         );
