@@ -44,6 +44,7 @@ export class AlimentList extends Component {
                     dataSource={this.state.dataSource}
                     enableEmptySections={true}
                     renderRow={aliment => (<AlimentView aliment={aliment} onPress={(aliment => this.onAlimentPress(aliment))}/>)}/>
+
             </View>
         );
     }
@@ -76,5 +77,9 @@ export class AlimentList extends Component {
         this._isMounted = false;
         this.unsubscribe();
         this.props.store.dispatch(cancelLoadAliments());
+    }
+
+    onDeleteAliment(aliment) {
+        log("onDeleteAliment");
     }
 }

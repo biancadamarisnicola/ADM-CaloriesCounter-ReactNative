@@ -1,9 +1,9 @@
 /**
  * Created by nicolab on 12/3/2016.
  */
-
+'use strict';
 import React, {Component} from 'react';
-import {Text, View, TextInput, ActivityIndicator} from 'react-native';
+import {Text, View, TextInput, Button, ActivityIndicator} from 'react-native';
 import {saveAliment, cancelSaveAliment} from './service';
 import {registerRightAction, issueText, getLogger} from '../core/utils';
 import styles from '../core/styles';
@@ -50,6 +50,7 @@ export class AlimentEdit extends Component {
                 { state.isSaving &&
                 <ActivityIndicator animating={true} style={styles.activityIndicator} size="large"/>
                 }
+                <Text onPress={(aliment => this.onDeleteButtonPress(aliment))}> Delete this aliment</Text>
                 <Text>Name</Text>
                 <TextInput value={state.aliment.name} onChangeText={(name) => this.updateAlimentName(name)}></TextInput>
                 <Text>Calories</Text>
@@ -63,6 +64,10 @@ export class AlimentEdit extends Component {
                 {message && <Text>{message}</Text>}
             </View>
         );
+    }
+
+    onDeleteButtonPress() {
+
     }
 
     componentDidMount() {

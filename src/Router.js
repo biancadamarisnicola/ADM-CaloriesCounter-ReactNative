@@ -118,6 +118,11 @@ const styles = StyleSheet.create({
         margin: 10,
         fontSize: 16
     },
+    deleteButton: {
+        color: '#dab3ff',
+        margin: 10,
+        fontSize: 16
+    },
     content: {
         color: '#1a0033',
         marginTop: 90,
