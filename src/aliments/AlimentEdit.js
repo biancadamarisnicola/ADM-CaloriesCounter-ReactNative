@@ -29,7 +29,7 @@ export class AlimentEdit extends Component {
         if (currentRoute.data) {
             this.state = {aliment: {...currentRoute.data}, isSaving: false};
         } else {
-            this.state = {aliment: {text: ''}, isSaving: false};
+            this.state = {aliment: {name: ''}, isSaving: false};
         }
         registerRightAction(this.props.navigator, this.onSave.bind(this));
     }
@@ -37,20 +37,29 @@ export class AlimentEdit extends Component {
     render() {
         log('render');
         const state = this.state;
+        if (state.aliment.calories === undefined){
+            //DONT HAVE AN OBJECT YET
+            this.state.aliment.calories = 0;
+            this.state.aliment.fats = 0;
+            this.state.aliment.proteins = 0;
+            this.state.aliment.carbs = 0;
+        }
         let message = issueText(state.issue);
         return (
             <View style={styles.content}>
                 { state.isSaving &&
                 <ActivityIndicator animating={true} style={styles.activityIndicator} size="large"/>
                 }
+                <Text>Name</Text>
+                <TextInput value={state.aliment.name} onChangeText={(name) => this.updateAlimentName(name)}></TextInput>
                 <Text>Calories</Text>
-                <TextInput keyboardType = 'numeric' value={state.aliment.calories.toString()} onChangeText={(calories) => this.updateAliment(calories, state.aliment.fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
+                <TextInput value={state.aliment.calories.toString()} onChangeText={(calories) => this.updateAliment(calories, state.aliment.fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
                 <Text>Proteins</Text>
-                <TextInput keyboardType = 'numeric' value={state.aliment.proteins.toString()} onChangeText={(proteins) => this.updateAliment(state.aliment.calories, state.aliment.fats, proteins, state.aliment.carbs)}></TextInput>
+                <TextInput value={state.aliment.proteins.toString()} onChangeText={(proteins) => this.updateAliment(state.aliment.calories, state.aliment.fats, proteins, state.aliment.carbs)}></TextInput>
                 <Text>Carbs</Text>
-                <TextInput keyboardType = 'numeric' value={state.aliment.carbs.toString()} onChangeText={(carbs) => this.updateAliment(state.aliment.calories, state.aliment.fats, state.aliment.proteins, carbs)}></TextInput>
+                <TextInput value={state.aliment.carbs.toString()} onChangeText={(carbs) => this.updateAliment(state.aliment.calories, state.aliment.fats, state.aliment.proteins, carbs)}></TextInput>
                 <Text>Fats</Text>
-                <TextInput keyboardType = 'numeric' value={state.aliment.fats.toString()} onChangeText={(fats) => this.updateAliment(state.aliment.calories, fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
+                <TextInput value={state.aliment.fats.toString()} onChangeText={(fats) => this.updateAliment(state.aliment.calories, fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
                 {message && <Text>{message}</Text>}
             </View>
         );
@@ -81,6 +90,12 @@ export class AlimentEdit extends Component {
         newState.aliment.proteins = Number(proteins);
         newState.aliment.carbs = Number(carbs);
         newState.aliment.fats = Number(fats);
+        this.setState(newState);
+    }
+
+    updateAlimentName(name) {
+        let newState = {...this.state};
+        newState.aliment.name = name;
         this.setState(newState);
     }
 
