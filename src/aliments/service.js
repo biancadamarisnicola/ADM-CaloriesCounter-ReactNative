@@ -11,7 +11,7 @@ const SAVE_ALIMENTS_SUCCEEDED = 'aliment/saveSucceded';
 const SAVE_ALIMENTS_FAILED = 'aliment/saveFailed';
 const CANCEL_SAVE_ALIMENTS = 'aliment/cancelSave';
 const DELETE_ALIMENT_STARTED = 'aliment/deleteStarted';
-const DELETE_ALIMENT_SUCCEDED = 'aliment/deleteSucceded';
+const DELETE_ALIMENT_SUCCEEDED = 'aliment/deleteSucceeded';
 const DELETE_ALIMENT_FAILED = 'aliment/deleteFailed';
 
 const log = getLogger('AlimentService');
@@ -94,6 +94,10 @@ export const saveAliment = (aliment) => (dispatch, getState) => {
 };
 export const cancelSaveAliment = () => action(CANCEL_SAVE_ALIMENTS);
 
+export const alimentCreated = (createdAliment) => action(SAVE_ALIMENTS_SUCCEEDED, createdAliment);
+export const alimentUpdated = (updatedAliment) => action(SAVE_ALIMENTS_SUCCEEDED, updatedAliment);
+export const alimentDeleted = (deletedAliment) => action(DELETE_ALIMENT_SUCCEEDED, deletedAliment);
+
 export const alimentReducer = (state = {items: [], isLoading: false, isSaving: false}, action) => { //newState (new object)
     switch (action.type) {
         case LOAD_ALIMENTS_STARTED:
@@ -121,7 +125,7 @@ export const alimentReducer = (state = {items: [], isLoading: false, isSaving: f
             return {...state, isSaving: false, isSavingCancelled: true};
         case DELETE_ALIMENT_STARTED:
             return {...state, isDeleting: true, isDeletingCancelled: false, issue: null};
-        case DELETE_ALIMENT_SUCCEDED:
+        case DELETE_ALIMENT_SUCCEEDED:
             return {...state, items: action.payload, isDeleting: false};
         case DELETE_ALIMENT_FAILED:
             return {...state, issue: action.payload.issue, isDeleting: false};

@@ -62,6 +62,11 @@ export class Router extends Component {
         //this.navigator.clear();
         log("AUHTEHTICATION SUCCEDED!!!!!!!!!!!!!!!!!!!!!!");
         this.navigator.push(AlimentList.route);
+        // if (this.notificationClient) {
+        //     this.notificationClient.disconnect();
+        // }
+        // this.notificationClient = new NotificationClient(this.store);
+        // this.notificationClient.connect();
     }
 }
 

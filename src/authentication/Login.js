@@ -7,6 +7,8 @@ import {login} from './service';
 import {getLogger, registerRightAction, issueText} from '../core/utils';
 import styles from '../core/styles';
 import Button from 'react-native-button';
+import {apiUrl} from '../core/api';
+import {User} from "./User";
 
 const log = getLogger('Login');
 
@@ -23,7 +25,12 @@ export class Login extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {username: '', password: ''};
+        this.store = this.props.store;
+        log(this.store.getState().authentication);
+        this.navigator = this.props.navigator;
+        this.userInfoRestored = false;
+        const auth = this.store.getState().authentication;
+        this.state = {...auth, username: auth.user.username, password: auth.user.password, url: auth.server.apiUrl};
         log('constructor');
     }
 
@@ -73,7 +80,10 @@ export class Login extends Component {
 
     onLogin() {
         log('onLogin');
-        this.props.store.dispatch(login(this.state)).then(() => {
+        const state = this.state;
+        log(state.username);
+        log(state.password);
+        this.props.store.dispatch(login({url: state.url}, new User(state.username,state.password))).then(() => {
             if (this.state.authentication.token) {
                 this.props.onAuthSucceeded();
             }
