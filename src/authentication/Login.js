@@ -6,6 +6,7 @@ import {Text, View, TextInput, StyleSheet, ActivityIndicator} from 'react-native
 import {login} from './service';
 import {getLogger, registerRightAction, issueText} from '../core/utils';
 import styles from '../core/styles';
+import Button from 'react-native-button';
 
 const log = getLogger('Login');
 
@@ -17,7 +18,7 @@ export class Login extends Component {
     }
 
     static get route() {
-        return {name: LOGIN_ROUTE, title: 'Authentication', rightText: 'Login'};
+        return {name: LOGIN_ROUTE, title: 'Authentication'};
     }
 
     constructor(props) {
@@ -44,6 +45,13 @@ export class Login extends Component {
                 <Text>Password</Text>
                 <TextInput onChangeText={(text) => this.setState({...this.state, password: text})}/>
                 {message && <Text>{message}</Text>}
+                <Button
+                    containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: 'white'}}
+                    style={styles.deleteButton}
+                    styleDisabled={{color: 'red'}}
+                    onPress={() =>this.onLogin()}>
+                    Login
+                </Button>
             </View>
         );
     }

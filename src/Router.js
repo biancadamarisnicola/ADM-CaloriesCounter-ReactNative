@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
     leftButton: {
         color: '#1a0033',
         margin: 10,
+        marginLeft: 20,
         fontSize: 17,
     },
     title: {
@@ -118,11 +119,21 @@ const styles = StyleSheet.create({
         margin: 10,
         fontSize: 16
     },
+
     deleteButton: {
-        color: '#dab3ff',
-        margin: 10,
-        fontSize: 16
+        color: '#B32401',
+        margin: 20,
+        fontSize: 18,
+        paddingVertical: 30,
     },
+
+    loginButton: {
+        color: '#1a0033',
+        margin: 20,
+        fontSize: 18,
+        paddingVertical: 30,
+    },
+
     content: {
         color: '#1a0033',
         marginTop: 90,

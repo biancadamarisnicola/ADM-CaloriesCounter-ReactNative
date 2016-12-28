@@ -7,13 +7,14 @@
     "test": "jest"
   },
   "dependencies": {
+    "mrn": "latest",
     "react": "15.3.2",
     "react-native": "0.36.1",
+    "react-native-elements": "^0.8.2",
     "react-redux": "^4.4.6",
     "redux": "^3.6.0",
     "redux-logger": "^2.7.4",
-    "redux-thunk": "^2.1.0",
-    "mrn": "latest"
+    "redux-thunk": "^2.1.0"
   },
   "jest": {
     "preset": "jest-react-native"

@@ -3,10 +3,12 @@
  */
 'use strict';
 import React, {Component} from 'react';
-import {Text, View, TextInput, Button, ActivityIndicator} from 'react-native';
-import {saveAliment, cancelSaveAliment} from './service';
+import {Text, View, TextInput, ActivityIndicator} from 'react-native';
+import {saveAliment, cancelSaveAliment, deleteAliment} from './service';
 import {registerRightAction, issueText, getLogger} from '../core/utils';
+import Button from 'react-native-button';
 import styles from '../core/styles';
+import {AlimentList} from "./AlimentList";
 
 const log = getLogger('AlimentEdit');
 const ALIMENT_EDIT_ROUTE = 'aliment/edit';
@@ -17,7 +19,7 @@ export class AlimentEdit extends Component {
     }
 
     static get route() {
-        return {name: ALIMENT_EDIT_ROUTE, title: 'Aliment Edit', rightText: 'Save'};
+        return {name: ALIMENT_EDIT_ROUTE, title: 'Aliment Edit'};
     }
 
     constructor(props) {
@@ -50,7 +52,8 @@ export class AlimentEdit extends Component {
                 { state.isSaving &&
                 <ActivityIndicator animating={true} style={styles.activityIndicator} size="large"/>
                 }
-                <Text onPress={(aliment => this.onDeleteButtonPress(aliment))}> Delete this aliment</Text>
+
+                {/*<Text onPress={(aliment => this.onDeleteButtonPress(aliment))}> Delete this aliment</Text>*/}
                 <Text>Name</Text>
                 <TextInput value={state.aliment.name} onChangeText={(name) => this.updateAlimentName(name)}></TextInput>
                 <Text>Calories</Text>
@@ -62,11 +65,31 @@ export class AlimentEdit extends Component {
                 <Text>Fats</Text>
                 <TextInput value={state.aliment.fats.toString()} onChangeText={(fats) => this.updateAliment(state.aliment.calories, fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
                 {message && <Text>{message}</Text>}
+                <Button
+                    containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: '#dab3ff'}}
+                    style={styles.deleteButton}
+                    onPress={(aliment => this.onSave())}>
+                    Save
+                </Button>
+                <Button
+                    containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: '#dab3ff'}}
+                    style={styles.deleteButton}
+                    onPress={(aliment => this.onDeleteButtonPress(aliment))}>
+                    Delete
+                </Button>
             </View>
         );
     }
 
     onDeleteButtonPress() {
+        log("onDeleteButtonPress");
+        this.props.store.dispatch(deleteAliment(this.state.aliment)).then(() => {
+            log('onAlimentDeleted');
+            if (!this.state.issue) {
+                this.props.navigator.pop();
+            }
+            this.props.navigator.push(AlimentList.route);
+        });
 
     }
 

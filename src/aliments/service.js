@@ -10,6 +10,9 @@ const SAVE_ALIMENTS_STARTED = 'aliment/saveStarted';
 const SAVE_ALIMENTS_SUCCEEDED = 'aliment/saveSucceded';
 const SAVE_ALIMENTS_FAILED = 'aliment/saveFailed';
 const CANCEL_SAVE_ALIMENTS = 'aliment/cancelSave';
+const DELETE_ALIMENT_STARTED = 'aliment/deleteStarted';
+const DELETE_ALIMENT_SUCCEDED = 'aliment/deleteSucceded';
+const DELETE_ALIMENT_FAILED = 'aliment/deleteFailed';
 
 const log = getLogger('AlimentService');
 
@@ -32,6 +35,32 @@ export const loadAliments = () => (dispatch, getState) => {
             log(`loadAliments err = ${err.message}`);
             if (!getState().aliment.isLoadingCancelled) {
                 dispatch(action(LOAD_ALIMENTS_FAILED, {issue: [{error: err.message}]}));
+            }
+        });
+};
+
+export const deleteAliment = (aliment) => (dispatch, getState) => {
+    log(`deleteAliment started`);
+    dispatch(action(DELETE_ALIMENT_STARTED));
+    let ok = false;
+    const url = `${alimUrl}/aliment/${aliment.name}`;
+    log(url);
+    return fetch(url, {method: 'DELETE', headers: authHeaders(getState().authentication.token)})
+        .then(res => {
+            log(`deleteAliment succeded`);
+            ok = res.ok;
+            return res.json();
+        })
+        .then(json => {
+            log(`deleteAliment ok: ${ok}, json: ${JSON.stringify(json)}`);
+            if (!getState().aliment.isDeleteCancelled) {
+                dispatch(action(ok ? DELETE_ALIMENT_SUCCEDED : DELETE_ALIMENT_FAILED, json));
+            }
+        })
+        .catch(err => {
+            log(`deleteAliment err = ${err.message}`);
+            if (!getState().aliment.isLoadingCancelled) {
+                dispatch(action(DELETE_ALIMENT_FAILED, {issue: [{error: err.message}]}));
             }
         });
 };
@@ -90,6 +119,12 @@ export const alimentReducer = (state = {items: [], isLoading: false, isSaving: f
             return {...state, issue: action.payload.issue, isSaving: false};
         case CANCEL_SAVE_ALIMENTS:
             return {...state, isSaving: false, isSavingCancelled: true};
+        case DELETE_ALIMENT_STARTED:
+            return {...state, isDeleting: true, isDeletingCancelled: false, issue: null};
+        case DELETE_ALIMENT_SUCCEDED:
+            return {...state, items: action.payload, isDeleting: false};
+        case DELETE_ALIMENT_FAILED:
+            return {...state, issue: action.payload.issue, isDeleting: false};
         default:
             return state;
     }
