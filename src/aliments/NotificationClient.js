@@ -23,6 +23,7 @@ export class NotificationClient {
         log(`connect...`);
         const store = this.store;
         const auth = store.getState().authentication;
+        log(auth);
         this.socket = io(auth.server.url, {transports: ['websocket']});
         const socket = this.socket;
         socket.on('connect', () => {

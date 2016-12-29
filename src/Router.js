@@ -6,6 +6,7 @@ import {Text, View, Navigator, TouchableOpacity, StyleSheet} from 'react-native'
 import {AlimentList, AlimentEdit} from './aliments';
 import {Login} from './authentication';
 import {getLogger} from './core/utils';
+import {NotificationClient} from "./aliments/NotificationClient";
 
 const log = getLogger('Router');
 
@@ -13,6 +14,7 @@ export class Router extends Component {
     constructor(props) {
         log(`constructor`);
         super(props);
+        this.store = this.props.store;
         this.authenticated = false;
     }
 
@@ -62,6 +64,7 @@ export class Router extends Component {
         //this.navigator.clear();
         log("AUHTEHTICATION SUCCEDED!!!!!!!!!!!!!!!!!!!!!!");
         this.navigator.push(AlimentList.route);
+        //TODO: for local storage
         // if (this.notificationClient) {
         //     this.notificationClient.disconnect();
         // }
@@ -144,5 +147,14 @@ const styles = StyleSheet.create({
         marginTop: 90,
         marginLeft: 20,
         marginRight: 20,
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
+
+    inputText: {
+        minWidth: 200,
+        width: 200
+    }
 });

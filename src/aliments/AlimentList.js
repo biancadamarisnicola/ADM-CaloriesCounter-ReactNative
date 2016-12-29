@@ -2,7 +2,7 @@
  * Created by nicolab on 12/3/2016.
  */
 import React, {Component} from 'react';
-import {ListView, Text, View, StatusBar, ActivityIndicator} from 'react-native';
+import {ListView, Text, View, StatusBar, ActivityIndicator, Image} from 'react-native';
 import {AlimentEdit} from './AlimentEdit';
 import {AlimentView} from './AlimentView';
 import {loadAliments, cancelLoadAliments} from './service';
