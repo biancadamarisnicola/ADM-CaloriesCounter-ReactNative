@@ -113,6 +113,7 @@ const styles = StyleSheet.create({
         margin: 10,
         marginLeft: 20,
         fontSize: 17,
+        width: 300
     },
     title: {
         paddingVertical: 10,
@@ -133,6 +134,7 @@ const styles = StyleSheet.create({
         margin: 20,
         fontSize: 18,
         paddingVertical: 30,
+        width: 200
     },
 
     loginButton: {

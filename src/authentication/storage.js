@@ -23,3 +23,15 @@ export const read = async(key) => {
     log(`read ${key}`);
     return JSON.parse(await AsyncStorage.getItem(key));
 }
+
+export const readAliment = async() => {
+    log(`loadAliments from DB started`);
+    AsyncStorage.getItem('Paine', (err, result) => {
+        console.log(result);
+    });
+};
+
+export const saveAliment = async(key, object) => {
+    log(`save ${key}`);
+    await AsyncStorage.setItem(key, JSON.stringify(object));
+};

@@ -3,7 +3,7 @@
  */
 'use strict';
 import React, {Component} from 'react';
-import {Text, View, TextInput, ActivityIndicator} from 'react-native';
+import {Text, View, TextInput, ActivityIndicator, NetInfo} from 'react-native';
 import {saveAliment, cancelSaveAliment, deleteAliment} from './service';
 import {registerRightAction, issueText, getLogger} from '../core/utils';
 import Button from 'react-native-button';
@@ -14,6 +14,10 @@ const log = getLogger('AlimentEdit');
 const ALIMENT_EDIT_ROUTE = 'aliment/edit';
 
 export class AlimentEdit extends Component {
+    state = {
+        isConnected: null,
+    };
+
     static get routeName() {
         return ALIMENT_EDIT_ROUTE;
     }
@@ -52,18 +56,19 @@ export class AlimentEdit extends Component {
                 { state.isSaving &&
                 <ActivityIndicator animating={true} style={styles.activityIndicator} size="large"/>
                 }
-
+                <Text style={{fontWeight: 'bold', color: 'red'}}>You are: {this.state.isConnected ? 'Online' : 'Offline'}</Text>
+                <Text>  </Text>
                 {/*<Text onPress={(aliment => this.onDeleteButtonPress(aliment))}> Delete this aliment</Text>*/}
-                <Text>Name</Text>
-                <TextInput value={state.aliment.name} onChangeText={(name) => this.updateAlimentName(name)}></TextInput>
-                <Text>Calories</Text>
-                <TextInput value={state.aliment.calories.toString()} onChangeText={(calories) => this.updateAliment(calories, state.aliment.fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
-                <Text>Proteins</Text>
-                <TextInput value={state.aliment.proteins.toString()} onChangeText={(proteins) => this.updateAliment(state.aliment.calories, state.aliment.fats, proteins, state.aliment.carbs)}></TextInput>
-                <Text>Carbs</Text>
-                <TextInput value={state.aliment.carbs.toString()} onChangeText={(carbs) => this.updateAliment(state.aliment.calories, state.aliment.fats, state.aliment.proteins, carbs)}></TextInput>
-                <Text>Fats</Text>
-                <TextInput value={state.aliment.fats.toString()} onChangeText={(fats) => this.updateAliment(state.aliment.calories, fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
+                <Text style={{fontWeight: 'bold', color: 'purple', width: 300}}>Name</Text>
+                <TextInput style={{height: 50, width: 300}} value={state.aliment.name} onChangeText={(name) => this.updateAlimentName(name)}></TextInput>
+                <Text style={{fontWeight: 'bold', color: 'purple', width: 300}}>Calories</Text>
+                <TextInput style={{height: 50, width: 300}} value={state.aliment.calories.toString()} onChangeText={(calories) => this.updateAliment(calories, state.aliment.fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
+                <Text style={{fontWeight: 'bold', color: 'purple', width: 300}}>Proteins</Text>
+                <TextInput style={{height: 50, width: 300}} value={state.aliment.proteins.toString()} onChangeText={(proteins) => this.updateAliment(state.aliment.calories, state.aliment.fats, proteins, state.aliment.carbs)}></TextInput>
+                <Text style={{fontWeight: 'bold', color: 'purple', width: 300}}>Carbs</Text>
+                <TextInput style={{height: 50, width: 300}} value={state.aliment.carbs.toString()} onChangeText={(carbs) => this.updateAliment(state.aliment.calories, state.aliment.fats, state.aliment.proteins, carbs)}></TextInput>
+                <Text style={{fontWeight: 'bold', color: 'purple', width: 300}}>Fats</Text>
+                <TextInput style={{height: 50, width: 300}} value={state.aliment.fats.toString()} onChangeText={(fats) => this.updateAliment(state.aliment.calories, fats, state.aliment.proteins, state.aliment.carbs)}></TextInput>
                 {message && <Text>{message}</Text>}
                 <Button
                     containerStyle={{padding:10, height:45, overflow:'hidden', borderRadius:4, backgroundColor: '#dab3ff'}}
@@ -103,6 +108,13 @@ export class AlimentEdit extends Component {
             const alimentState = store.getState().aliment;
             this.setState({...state, issue: alimentState.issue});
         });
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => { this.setState({isConnected}); }
+        );
     }
 
     componentWillUnmount() {
@@ -110,6 +122,10 @@ export class AlimentEdit extends Component {
         this._isMounted = false;
         this.unsubscribe();
         this.props.store.dispatch(cancelSaveAliment());
+        NetInfo.removeEventListener(
+            'change',
+            this._handleConnectionInfoChange
+        );
     }
 
     updateAliment(calories, fats, proteins, carbs) {
@@ -136,4 +152,11 @@ export class AlimentEdit extends Component {
             }
         });
     }
+
+    _handleConnectivityChange = (isConnected) => {
+        this.setState({
+            isConnected,
+        });
+    };
+
 }

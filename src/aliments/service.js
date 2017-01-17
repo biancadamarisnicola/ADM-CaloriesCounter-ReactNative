@@ -1,5 +1,7 @@
 import {apiUrl, authHeaders, alimUrl} from "../core/api";
 import {getLogger} from '../core/utils';
+import {readAliments} from '../authentication';
+import {readAliment} from "../authentication/storage";
 
 const action = (type, payload) => ({type, payload});
 const LOAD_ALIMENTS_STARTED = 'aliment/loadStarted';
@@ -37,6 +39,19 @@ export const loadAliments = () => (dispatch, getState) => {
                 dispatch(action(LOAD_ALIMENTS_FAILED, {issue: [{error: err.message}]}));
             }
         });
+};
+
+export const loadAlimDB=()=> async(dispatch, getState) => {
+    log(`loadAliments from DB started`);
+    try {
+        dispatch(action(LOAD_ALIMENTS_STARTED));
+        await Promise.all([readAliment()]);
+        log(`login user saved`);
+        dispatch(action(LOAD_ALIMENTS_SUCCEEDED));
+    } catch (err) {
+        log(`login failed`);
+        dispatch(action(LOAD_ALIMENTS_FAILED, {issue: [{error: err.message}]}));
+    }
 };
 
 export const deleteAliment = (aliment) => (dispatch, getState) => {

@@ -2,17 +2,24 @@
  * Created by nicolab on 12/3/2016.
  */
 import React, {Component} from 'react';
-import {ListView, Text, View, StatusBar, ActivityIndicator, Image} from 'react-native';
+import {ListView, Text, View, StatusBar, ActivityIndicator, Image, NetInfo, AsyncStorage} from 'react-native';
 import {AlimentEdit} from './AlimentEdit';
 import {AlimentView} from './AlimentView';
-import {loadAliments, cancelLoadAliments} from './service';
+import {loadAliments, cancelLoadAliments, loadAlimDB} from './service';
 import {registerRightAction, getLogger, issueText} from '../core/utils';
 import styles from '../core/styles';
+
 
 const log = getLogger('AlimentList');
 const ALIMENT_LIST_ROUTE = 'aliment/list';
 
 export class AlimentList extends Component {
+    state = {
+        isConnected: true,
+    };
+
+    aliments = {};
+
     static get routeName() {
         return ALIMENT_LIST_ROUTE;
     }
@@ -40,11 +47,14 @@ export class AlimentList extends Component {
                 <ActivityIndicator animating={true} style={styles.activityIndicator} size="large"/>
                 }
                 {message && <Text>{message}</Text>}
+                <Text
+                    style={{fontWeight: 'bold', color: 'red'}}>You are: {this.state.isConnected ? 'Online' : 'Offline'}</Text>
+                <Text> </Text>
                 <ListView
                     dataSource={this.state.dataSource}
                     enableEmptySections={true}
-                    renderRow={aliment => (<AlimentView aliment={aliment} onPress={(aliment => this.onAlimentPress(aliment))}/>)}/>
-
+                    renderRow={aliment => (<AlimentView aliment={aliment} onPress={(aliment => this.onAlimentPress(aliment))}/>
+                    )}/>
             </View>
         );
     }
@@ -69,7 +79,24 @@ export class AlimentList extends Component {
             const alimentState = store.getState().aliment;
             this.setState({dataSource: this.ds.cloneWithRows(alimentState.items), isLoading: alimentState.isLoading});
         });
-        store.dispatch(loadAliments());
+
+        if (this.state.isConnected || this.state.isConnected === undefined) {
+            store.dispatch(loadAliments());
+            log("****"+this.props.store.getState().aliment.toString());
+        } else {
+            log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~" + this.state.isConnected);
+            log("****"+this.state.dataSource.getRowData(0));
+            loadAlimDB();
+        } ;
+        NetInfo.isConnected.addEventListener(
+            'change',
+            this._handleConnectivityChange
+        );
+        NetInfo.isConnected.fetch().done(
+            (isConnected) => {
+                this.setState({isConnected});
+            }
+        );
     }
 
     componentWillUnmount() {
@@ -77,9 +104,15 @@ export class AlimentList extends Component {
         this._isMounted = false;
         this.unsubscribe();
         this.props.store.dispatch(cancelLoadAliments());
+        NetInfo.removeEventListener(
+            'change',
+            this._handleConnectionInfoChange
+        );
     }
 
     onDeleteAliment(aliment) {
         log("onDeleteAliment");
     }
+
+
 }
